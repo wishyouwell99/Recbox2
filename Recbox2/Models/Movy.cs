@@ -18,6 +18,7 @@ namespace Recbox2.Models
         public Movy()
         {
             this.KioskMovies = new HashSet<KioskMovy>();
+            this.Rentals = new HashSet<Rental>();
         }
     
         public int MovieId { get; set; }
@@ -36,5 +37,7 @@ namespace Recbox2.Models
         public virtual ICollection<KioskMovy> KioskMovies { get; set; }
         public virtual Genre Genre { get; set; }
         public virtual Rating Rating { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rental> Rentals { get; set; }
     }
 }

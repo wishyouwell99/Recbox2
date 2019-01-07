@@ -14,12 +14,6 @@ namespace Recbox2.Models
     
     public partial class KioskMovy
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public KioskMovy()
-        {
-            this.Rentals = new HashSet<Rental>();
-        }
-    
         public int KioskMovieId { get; set; }
         public int KioskId { get; set; }
         public int MovieId { get; set; }
@@ -28,7 +22,5 @@ namespace Recbox2.Models
     
         public virtual Kiosk Kiosk { get; set; }
         public virtual Movy Movy { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Rental> Rentals { get; set; }
     }
 }

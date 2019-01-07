@@ -15,8 +15,7 @@ namespace Recbox2.Models
         public int Year { get; set; }
         public decimal Fee { get; set; }
         public string Rating { get; set; }
-        public string Genre { get; set; }
-        public int Quantity { get; set; }
+        public string Genre { get; set; }        
         public int OnHand { get; set; }
         public int MovieId { get; set; }
 

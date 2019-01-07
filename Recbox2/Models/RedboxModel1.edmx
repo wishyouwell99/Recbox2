@@ -89,7 +89,8 @@
           </Key>
           <Property Name="RentalId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CustomerId" Type="int" Nullable="false" />
-          <Property Name="KioskMovieId" Type="int" Nullable="false" />
+          <Property Name="KioskId" Type="int" Nullable="false" />
+          <Property Name="MovieId" Type="int" Nullable="false" />
           <Property Name="RentalDate" Type="datetime" Nullable="false" />
           <Property Name="RentalDueDate" Type="datetime" Nullable="false" />
           <Property Name="ReturnDate" Type="datetime" />
@@ -156,15 +157,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Rentals_KioskMovie">
-          <End Role="KioskMovies" Type="Self.KioskMovies" Multiplicity="1" />
+        <Association Name="FK_Rentals_Kiosks">
+          <End Role="Kiosks" Type="Self.Kiosks" Multiplicity="1" />
           <End Role="Rentals" Type="Self.Rentals" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="KioskMovies">
-              <PropertyRef Name="KioskMovieId" />
+            <Principal Role="Kiosks">
+              <PropertyRef Name="KioskId" />
             </Principal>
             <Dependent Role="Rentals">
-              <PropertyRef Name="KioskMovieId" />
+              <PropertyRef Name="KioskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rentals_Movies">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1" />
+          <End Role="Rentals" Type="Self.Rentals" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="MovieId" />
+            </Principal>
+            <Dependent Role="Rentals">
+              <PropertyRef Name="MovieId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -202,8 +215,12 @@
             <End Role="Customers" EntitySet="Customers" />
             <End Role="Rentals" EntitySet="Rentals" />
           </AssociationSet>
-          <AssociationSet Name="FK_Rentals_KioskMovie" Association="Self.FK_Rentals_KioskMovie">
-            <End Role="KioskMovies" EntitySet="KioskMovies" />
+          <AssociationSet Name="FK_Rentals_Kiosks" Association="Self.FK_Rentals_Kiosks">
+            <End Role="Kiosks" EntitySet="Kiosks" />
+            <End Role="Rentals" EntitySet="Rentals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rentals_Movies" Association="Self.FK_Rentals_Movies">
+            <End Role="Movies" EntitySet="Movies" />
             <End Role="Rentals" EntitySet="Rentals" />
           </AssociationSet>
         </EntityContainer>
@@ -243,7 +260,6 @@
           <Property Name="CreatedOn" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Kiosk" Relationship="Self.FK_KioskMovies_Kiosk" FromRole="KioskMovies" ToRole="Kiosks" />
           <NavigationProperty Name="Movy" Relationship="Self.FK_KioskMovies_Movies" FromRole="KioskMovies" ToRole="Movies" />
-          <NavigationProperty Name="Rentals" Relationship="RedboxModel.FK_Rentals_KioskMovie" FromRole="KioskMovy" ToRole="Rental" />
         </EntityType>
         <EntityType Name="Kiosk">
           <Key>
@@ -260,6 +276,7 @@
           <Property Name="CreatedOn" Type="DateTime" Precision="3" />
           <NavigationProperty Name="KioskMovies" Relationship="Self.FK_KioskMovies_Kiosk" FromRole="Kiosks" ToRole="KioskMovies" />
           <Property Name="RentalLength" Type="Int32" />
+          <NavigationProperty Name="Rentals" Relationship="RedboxModel.FK_Rentals_Kiosks" FromRole="Kiosk" ToRole="Rental" />
         </EntityType>
         <EntityType Name="Movy">
           <Key>
@@ -279,6 +296,7 @@
           <NavigationProperty Name="KioskMovies" Relationship="Self.FK_KioskMovies_Movies" FromRole="Movies" ToRole="KioskMovies" />
           <NavigationProperty Name="Genre" Relationship="RedboxModel.FK_Movies_Genres" FromRole="Movy" ToRole="Genre" />
           <NavigationProperty Name="Rating" Relationship="RedboxModel.FK_Movies_Ratings" FromRole="Movy" ToRole="Rating" />
+          <NavigationProperty Name="Rentals" Relationship="RedboxModel.FK_Rentals_Movies" FromRole="Movy" ToRole="Rental" />
         </EntityType>
         <Association Name="FK_KioskMovies_Kiosk">
           <End Role="Kiosks" Type="Self.Kiosk" Multiplicity="1" />
@@ -330,19 +348,23 @@
           <FunctionImport Name="spKioskMoviesForRentGet" ReturnType="Collection(RedboxModel.spKioskMoviesForRentGet_Result)">
           <Parameter Name="kioskId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="spCustomerRentals" ReturnType="Collection(RedboxModel.spCustomerRentals_Result)">
+          <Parameter Name="customerId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <EntitySet Name="Rentals" EntityType="RedboxModel.Rental" />
           <AssociationSet Name="FK_Rentals_Customers" Association="RedboxModel.FK_Rentals_Customers">
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Rental" EntitySet="Rentals" />
           </AssociationSet>
-          <AssociationSet Name="FK_Rentals_KioskMovie" Association="RedboxModel.FK_Rentals_KioskMovie">
-            <End Role="KioskMovy" EntitySet="KioskMovies" />
+          <AssociationSet Name="FK_Rentals_Kiosks" Association="RedboxModel.FK_Rentals_Kiosks">
+            <End Role="Kiosk" EntitySet="Kiosks" />
             <End Role="Rental" EntitySet="Rentals" />
           </AssociationSet>
-          <FunctionImport Name="spCustomerRentals" ReturnType="Collection(RedboxModel.spCustomerRentals_Result)">
-          <Parameter Name="customerId" Mode="In" Type="Int32" />
-          </FunctionImport>
-        </EntityContainer>
+          <AssociationSet Name="FK_Rentals_Movies" Association="RedboxModel.FK_Rentals_Movies">
+            <End Role="Movy" EntitySet="Movies" />
+            <End Role="Rental" EntitySet="Rentals" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Genre">
           <Key>
             <PropertyRef Name="GenreId" />
@@ -399,20 +421,29 @@
           <Property Type="String" Name="RatingValue" Nullable="true" MaxLength="16" />
           <Property Type="Int32" Name="OnHand" Nullable="true" />
           </ComplexType>
+        <ComplexType Name="spCustomerRentals_Result">
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="256" />
+          <Property Type="DateTime" Name="RentalDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="RentalDueDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="ReturnDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="MovieId" Nullable="false" />
+        </ComplexType>
         <EntityType Name="Rental">
           <Key>
             <PropertyRef Name="RentalId" />
           </Key>
           <Property Name="RentalId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CustomerId" Type="Int32" Nullable="false" />
-          <Property Name="KioskMovieId" Type="Int32" Nullable="false" />
+          <Property Name="KioskId" Type="Int32" Nullable="false" />
+          <Property Name="MovieId" Type="Int32" Nullable="false" />
           <Property Name="RentalDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RentalDueDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ReturnDate" Type="DateTime" Precision="3" />
           <Property Name="Fee" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Customer" Relationship="RedboxModel.FK_Rentals_Customers" FromRole="Rental" ToRole="Customer" />
-          <NavigationProperty Name="KioskMovy" Relationship="RedboxModel.FK_Rentals_KioskMovie" FromRole="Rental" ToRole="KioskMovy" />
-          <Property Name="RentalDueDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Kiosk" Relationship="RedboxModel.FK_Rentals_Kiosks" FromRole="Rental" ToRole="Kiosk" />
+          <NavigationProperty Name="Movy" Relationship="RedboxModel.FK_Rentals_Movies" FromRole="Rental" ToRole="Movy" />
         </EntityType>
         <Association Name="FK_Rentals_Customers">
           <End Type="RedboxModel.Customer" Role="Customer" Multiplicity="1" />
@@ -426,26 +457,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Rentals_KioskMovie">
-          <End Type="RedboxModel.KioskMovy" Role="KioskMovy" Multiplicity="1" />
+        <Association Name="FK_Rentals_Kiosks">
+          <End Type="RedboxModel.Kiosk" Role="Kiosk" Multiplicity="1" />
           <End Type="RedboxModel.Rental" Role="Rental" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="KioskMovy">
-              <PropertyRef Name="KioskMovieId" />
+            <Principal Role="Kiosk">
+              <PropertyRef Name="KioskId" />
             </Principal>
             <Dependent Role="Rental">
-              <PropertyRef Name="KioskMovieId" />
+              <PropertyRef Name="KioskId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="spCustomerRentals_Result">
-          <Property Type="String" Name="Title" Nullable="false" MaxLength="256" />
-          <Property Type="DateTime" Name="RentalDate" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="RentalDueDate" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="ReturnDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="MovieId" Nullable="false" />
-        </ComplexType>
-      </Schema>
+        <Association Name="FK_Rentals_Movies">
+          <End Type="RedboxModel.Movy" Role="Movy" Multiplicity="1" />
+          <End Type="RedboxModel.Rental" Role="Rental" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movy">
+              <PropertyRef Name="MovieId" />
+            </Principal>
+            <Dependent Role="Rental">
+              <PropertyRef Name="MovieId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -552,20 +588,6 @@
                 </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="Rentals">
-            <EntityTypeMapping TypeName="RedboxModel.Rental">
-              <MappingFragment StoreEntitySet="Rentals">
-                <ScalarProperty Name="RentalDueDate" ColumnName="RentalDueDate" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="Fee" ColumnName="Fee" />
-                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
-                <ScalarProperty Name="RentalDate" ColumnName="RentalDate" />
-                <ScalarProperty Name="KioskMovieId" ColumnName="KioskMovieId" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="RentalId" ColumnName="RentalId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="spCustomerRentals" FunctionName="RedboxModel.Store.spCustomerRentals">
             <ResultMapping>
               <ComplexTypeMapping TypeName="RedboxModel.spCustomerRentals_Result">
@@ -577,6 +599,21 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Rentals">
+            <EntityTypeMapping TypeName="RedboxModel.Rental">
+              <MappingFragment StoreEntitySet="Rentals">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Fee" ColumnName="Fee" />
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="RentalDueDate" ColumnName="RentalDueDate" />
+                <ScalarProperty Name="RentalDate" ColumnName="RentalDate" />
+                <ScalarProperty Name="MovieId" ColumnName="MovieId" />
+                <ScalarProperty Name="KioskId" ColumnName="KioskId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="RentalId" ColumnName="RentalId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

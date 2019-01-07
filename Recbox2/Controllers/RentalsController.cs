@@ -89,7 +89,8 @@ namespace Recbox2.Controllers
                 // rent this movie
                 var rental = new Rental();
                 rental.CustomerId = rentalList.CustomerId;
-                rental.KioskMovieId = kioskMovie.KioskMovieId;
+                rental.MovieId = movie.MovieId;
+                rental.KioskId = kiosk.KioskId;
                 rental.Fee = movie.Fee;
                 rental.RentalDate = DateTime.Now;
                 rental.CreatedOn = DateTime.Now;
@@ -148,6 +149,13 @@ namespace Recbox2.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound, "Invalid Kiosk");
             }
 
+            // check if this customer has this movie out.
+            var rental = db.Rentals.Where(r => r.CustomerId == customerId && r.MovieId == movieId).FirstOrDefault();
+            if (rental==null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, string.Format("Customer: {0} does not have Movie: {1} out for rental", customerId, movieId));
+            }
+
             // check if this kiosk has this movie.
             var kioskMovie = db.KioskMovies.Where(r => r.KioskId == kioskId && r.MovieId == movieId).FirstOrDefault();
             // if htis kiosk doesn't yet have the movie, then create it there.
@@ -166,6 +174,9 @@ namespace Recbox2.Controllers
                 kioskMovie.OnHand++;
                 db.Entry(kioskMovie).State = EntityState.Modified;
             }
+
+            rental.ReturnDate = DateTime.Now;
+            db.Entry(rental).State = EntityState.Modified;
 
             db.SaveChanges();
 

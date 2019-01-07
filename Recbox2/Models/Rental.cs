@@ -16,14 +16,16 @@ namespace Recbox2.Models
     {
         public int RentalId { get; set; }
         public int CustomerId { get; set; }
-        public int KioskMovieId { get; set; }
+        public int KioskId { get; set; }
+        public int MovieId { get; set; }
         public System.DateTime RentalDate { get; set; }
+        public System.DateTime RentalDueDate { get; set; }
         public Nullable<System.DateTime> ReturnDate { get; set; }
         public decimal Fee { get; set; }
         public System.DateTime CreatedOn { get; set; }
-        public System.DateTime RentalDueDate { get; set; }
     
         public virtual Customer Customer { get; set; }
-        public virtual KioskMovy KioskMovy { get; set; }
+        public virtual Kiosk Kiosk { get; set; }
+        public virtual Movy Movy { get; set; }
     }
 }
