@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="af06cf058eb54d0db025add82e9c3b82" Name="Diagram1">
+        <EntityTypeShape EntityType="RedboxModel.Customer" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RedboxModel.KioskMovy" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="RedboxModel.Kiosk" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="RedboxModel.Movy" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="RedboxModel.FK_KioskMovies_Kiosk" ManuallyRouted="false" />
+        <AssociationConnector Association="RedboxModel.FK_KioskMovies_Movies" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="RedboxModel.Genre" Width="1.5" PointX="0.75" PointY="12.125" />
+        <EntityTypeShape EntityType="RedboxModel.Rating" Width="1.5" PointX="0.75" PointY="9.375" />
+        <AssociationConnector Association="RedboxModel.FK_Movies_Genres" />
+        <AssociationConnector Association="RedboxModel.FK_Movies_Ratings" />
+        <EntityTypeShape EntityType="RedboxModel.Rental" Width="1.5" PointX="7" PointY="3.625" />
+        <AssociationConnector Association="RedboxModel.FK_Rentals_Customers" />
+        <AssociationConnector Association="RedboxModel.FK_Rentals_KioskMovie" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
