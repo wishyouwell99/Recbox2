@@ -109,7 +109,9 @@
       <DependentUpon>RedboxModel1.edmx</DependentUpon>
       <LastGenOutput>RedboxModel1.cs</LastGenOutput>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
